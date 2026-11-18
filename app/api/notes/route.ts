@@ -7,7 +7,10 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   const user = await getRevisionSession();
-  if (!user.ok) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  const admin = await getAdminSession();
+  if (!user.ok && !admin.ok) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
 
   const sp = request.nextUrl.searchParams;
   const pagina = sp.get("pagina");
