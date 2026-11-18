@@ -1,0 +1,282 @@
+# INFORME_ASSETS — catálogo revisión
+
+- **Fuente:** `printitbcn/cat-logo-2026-` rama `redesign-home` @ `9efecd0`
+
+- **Nota:** `main` es ancestro de `redesign-home`; se usa `redesign-home` por ser el estado más reciente del catálogo (incluye el live de main + rediseño home).
+
+- **Copiados:** 172 archivos
+
+- **Excluidos (existentes no referenciados / trabajo):** 93 archivos
+
+- **Carpetas enteras excluidas:** revisar/, videos_1080p/, node_modules/, .cursor/
+
+
+## Copiado
+
+- `.gitattributes`
+- `app.js`
+- `components/home/home.css`
+- `components/home/home.js`
+- `index.html`
+- `media/aplicaciones/aereos/aereo-sin-luz-ok-def.mov`
+- `media/aplicaciones/aereos/bombilla-led-e40.svg`
+- `media/aplicaciones/aereos/campana-led-ufo-200w.svg`
+- `media/aplicaciones/aereos/circular-con-luz-pro.mp4`
+- `media/aplicaciones/aereos/circular-sin-luz-placements-def.mov`
+- `media/aplicaciones/aereos/cubos-placements-def.mov`
+- `media/aplicaciones/aereos/exteirior-cubo.jpg`
+- `media/aplicaciones/aereos/friso-def-montaje-tecnico.mov`
+- `media/aplicaciones/aereos/frisos-aereos-varios.mp4`
+- `media/aplicaciones/aereos/frisos-con-y-sin-luz-placements.mov`
+- `media/aplicaciones/aereos/frisos-primeros.mov`
+- `media/aplicaciones/aereos/interior-aligned.png`
+- `media/aplicaciones/aereos/tecnico-aereo-p36.mov`
+- `media/aplicaciones/aereos/tecnico-cubos.mov`
+- `media/aplicaciones/lightbox/exterior-aligned.png`
+- `media/aplicaciones/lightbox/exterior-p50-a-pared.jpg`
+- `media/aplicaciones/lightbox/interior-aligned.png`
+- `media/aplicaciones/lightbox/lightbox-a-pared-interior-mercedes.jpg`
+- `media/aplicaciones/lightbox/lightbox-completo-def.jpg`
+- `media/aplicaciones/lightbox/lightbox-doble-cara-delante.jpg`
+- `media/aplicaciones/lightbox/lightbox-doble-cara-interior.jpg`
+- `media/aplicaciones/lightbox/lightbox-exterior.jpg`
+- `media/aplicaciones/lightbox/lightbox-mercedes-exterior-p50.jpg`
+- `media/aplicaciones/lightbox/lightbox-miniatura.png`
+- `media/aplicaciones/lightbox/lightbox-pared-exterior-compare.jpg`
+- `media/aplicaciones/lightbox/lightbox-pared-interior-led.png`
+- `media/aplicaciones/lightbox/lightbox-tecnico-doble-cara.mov`
+- `media/aplicaciones/lightbox/lightboxes-doble-cara-corregido-def.mov`
+- `media/aplicaciones/lightbox/lux-exterior-def.png`
+- `media/aplicaciones/lightbox/lux-exterior.png`
+- `media/aplicaciones/lightbox/luxpanel-def-placements.mov`
+- `media/aplicaciones/lightbox/luxpanel-definitivo-sin-logo-montblanc.mov`
+- `media/aplicaciones/lightbox/p120-lightboxes-def.mp4`
+- `media/aplicaciones/lightbox/p50-backlight-tecnico.mov`
+- `media/aplicaciones/lightbox/p50-placements-update.mov`
+- `media/aplicaciones/lightbox/tecnico-lightbox-a-pared-p100.mov`
+- `media/aplicaciones/luminarias/16-9-on-off-p100-placements.mov`
+- `media/aplicaciones/luminarias/custom-1.png`
+- `media/aplicaciones/luminarias/custom-2.png`
+- `media/aplicaciones/luminarias/def-p100-hex-on-off.mov`
+- `media/aplicaciones/luminarias/detalle-dali-casambi-leds.mov`
+- `media/aplicaciones/luminarias/dimmer-def-def-def.mp4`
+- `media/aplicaciones/luminarias/dimmer-placements.mp4`
+- `media/aplicaciones/luminarias/dimmer-tecnico.mov`
+- `media/aplicaciones/luminarias/dinamic-white-placements-9x16.mp4`
+- `media/aplicaciones/luminarias/dinamico-prueba-1-9x16.mp4`
+- `media/aplicaciones/luminarias/dinamico-tecnico-completo-def-9x16.mp4`
+- `media/aplicaciones/luminarias/exterior-nike-pixel-led.png`
+- `media/aplicaciones/luminarias/exterior-on-off-p100.png`
+- `media/aplicaciones/luminarias/interior-nike-pixel-led.png`
+- `media/aplicaciones/luminarias/interior-on-off-p100.png`
+- `media/aplicaciones/luminarias/led-dynamic.mp4`
+- `media/aplicaciones/luminarias/luminaria-indice.png`
+- `media/aplicaciones/luminarias/on-off-4k-action.mp4`
+- `media/aplicaciones/luminarias/pastilla-prueba.mp4`
+- `media/aplicaciones/luminarias/pixel-led-nike.mp4`
+- `media/aplicaciones/luminarias/special-custom.mov`
+- `media/aplicaciones/luminarias/special-project-led-dynamic.mp4`
+- `media/aplicaciones/luminarias/technical-pixel-led-def.mov`
+- `media/aplicaciones/luminarias/totem-dinamic-exterior-white.jpg`
+- `media/aplicaciones/luminarias/totem-dinamic-white-open.jpg`
+- `media/aplicaciones/luminarias/tunable-action-def-916.mp4`
+- `media/aplicaciones/luminarias/tunable-dedo-arreglo-9x16.mp4`
+- `media/aplicaciones/luminarias/tunable-exterior.png`
+- `media/aplicaciones/luminarias/tunable-interior.png`
+- `media/aplicaciones/luminarias/tunable-rectified-placements-9x16.mp4`
+- `media/aplicaciones/luminarias/tunable-white-technical-video.mp4`
+- `media/aplicaciones/rigidos/rigidos-miniatura.jpg`
+- `media/aplicaciones/rigidos/rigidos-nyala-def.mov`
+- `media/aplicaciones/rigidos/showroom-rigidos-print-it.mov`
+- `media/aplicaciones/totems/2.jpg`
+- `media/aplicaciones/totems/interior-totem-in-luz.png`
+- `media/aplicaciones/totems/mock-up-backdrops-backdrops-con-luz.mp4`
+- `media/aplicaciones/totems/totem-placements.mov`
+- `media/aplicaciones/totems/totem-sin-luz-tecnico.mov`
+- `media/aplicaciones/totems/totems-backdrops-photocalls-con-luz.png`
+- `media/aplicaciones/vestimos/vestimos-tu-espacio.mp4`
+- `media/aplicaciones/vestimos/vestir-espacio-def-def.mov`
+- `media/aplicaciones/vestimos/voile-miniatura.png`
+- `media/aplicaciones/vestimos/voile-tecnico-def-def.mov`
+- `media/aplicaciones/vestimos/voile-top.mov`
+- `media/brand/categories/aeris.png`
+- `media/brand/categories/totems.png`
+- `media/brand/comprimidovideo-render-rhino.mp4`
+- `media/brand/cubo-conector.png`
+- `media/brand/cubo-perfil.png`
+- `media/brand/full-logo-black.png`
+- `media/brand/icon-radiacion-electromagnetica-mask.png`
+- `media/brand/icon-reciclaje-eco.png`
+- `media/brand/logo-oficial.png`
+- `media/brand/luminaria-p-100-naked.jpg`
+- `media/brand/luminaria-p-100-relleno.png`
+- `media/brand/p70.png`
+- `media/brand/products/luminaria-p100.png`
+- `media/brand/products/luminaria-showroom-1.jpg`
+- `media/brand/products/luminaria-showroom-2.jpg`
+- `media/brand/products/showroom-indu-2.jpg`
+- `media/brand/vid1.mp4`
+- `media/brand/video intro catalogo .mp4`
+- `media/fichas/ficha-general-totem-printit.pdf`
+- `media/fichas/ficha-tecnica-backlight-suspendido-on-off-p100-fronts-esp.pdf`
+- `media/fichas/ficha-tecnica-backlight-suspendido-on-off-p100-s12r.pdf`
+- `media/fichas/ficha-tecnica-cubo-backlight.pdf`
+- `media/fichas/ficha-tecnica-formas-aereo-490.pdf`
+- `media/fichas/ficha-tecnica-lightbox-a-pared-p50-s12r.pdf`
+- `media/fichas/ficha-tecnica-luxpanel-general.pdf`
+- `media/fichas/ficha-tecnica-pixel-led-dynamic-lightbox-autoportante-p100.pdf`
+- `media/fichas/ficha-tecnica-tws18-luminaria-circular-print-it-ok.pdf`
+- `media/fichas/friso-arista-exterior-ficha.png`
+- `media/fichas/friso-arista-interior-ficha.png`
+- `media/fichas/friso-conector-ficha.png`
+- `media/fichas/friso-p120-ficha.png`
+- `media/fichas/lightbox-p120-a-dos-caras-base-metro.pdf`
+- `media/fichas/printit-aereo-circular-p35.pdf`
+- `media/fichas/printit-aereo-friso.pdf`
+- `media/perfiles/m1614.png`
+- `media/perfiles/p100-2.png`
+- `media/perfiles/p100.png`
+- `media/perfiles/p120.png`
+- `media/perfiles/p30.png`
+- `media/perfiles/p35.png`
+- `media/perfiles/p36.png`
+- `media/perfiles/p50.png`
+- `product-banners-y-circulares.html`
+- `product-barniz-drop-gloss.html`
+- `product-barniz-semi-mate.html`
+- `product-circulares-con-luz.html`
+- `product-circulares-sin-luz.html`
+- `product-cubos.html`
+- `product-custom.html`
+- `product-dali-casambi.html`
+- `product-dynamic-white.html`
+- `product-forrado-columnas.html`
+- `product-forrado-paredes.html`
+- `product-frisos.html`
+- `product-impresion-uvi.html`
+- `product-lightbox-doble-cara.html`
+- `product-lightbox-pared-cortinas-led.html`
+- `product-lightbox-pared.html`
+- `product-luxpanel.html`
+- `product-on-off.html`
+- `product-pixel-led.html`
+- `product-relieve-braille.html`
+- `product-relieve-cmyk.html`
+- `product-rigidos.html`
+- `product-sin-luz.html`
+- `product-tunable-white.html`
+- `product-voile.html`
+- `projects.html`
+- `projects.js`
+- `public/icons/categorias/aereos-dark.png`
+- `public/icons/categorias/aereos-light.png`
+- `public/icons/categorias/lightbox-dark.png`
+- `public/icons/categorias/lightbox-light.png`
+- `public/icons/categorias/luminarias-dark.png`
+- `public/icons/categorias/luminarias-light.png`
+- `public/icons/categorias/rigidos-dark.png`
+- `public/icons/categorias/rigidos-light.png`
+- `public/icons/categorias/totems-dark.png`
+- `public/icons/categorias/totems-light.png`
+- `public/icons/categorias/viste-tu-espacio-dark.png`
+- `public/icons/categorias/viste-tu-espacio-light.png`
+- `scripts/dual-video-focus.js`
+- `sitemap/index.html`
+- `sitemap/sitemap.xml`
+- `styles.css`
+
+## Excluido por no usarse en páginas live
+
+- `PROJECT-GUIDE.md`
+- `components/home/previews/home-dark-desktop.png`
+- `components/home/previews/home-dark-mobile.png`
+- `components/home/previews/home-light-desktop.png`
+- `components/home/previews/home-light-mobile.png`
+- `components/home/previews/swatch-debug.png`
+- `components/home/previews/swatch-debug2.png`
+- `components/home/previews/swatch-grid-light.png`
+- `media/README.md`
+- `media/aplicaciones/aereos/AEREO SIN LUZ OK DEF.mov`
+- `media/aplicaciones/aereos/aereo-circular-sin-luz.mp4`
+- `media/aplicaciones/aereos/circular-tecnico-aereo-490.mov`
+- `media/aplicaciones/aereos/cubos-updated-placements-nov.mov`
+- `media/aplicaciones/aereos/friso-tecnico-con-luz.mov`
+- `media/aplicaciones/aereos/tecnico-aereo-sin-luz.mov`
+- `media/aplicaciones/lightbox/LIGHTBOXES DOBLE CARA CORREGIDO DEF .mov`
+- `media/aplicaciones/lightbox/LUXPANEL DEF PLACEMENTS.mov`
+- `media/aplicaciones/lightbox/lightbox doble cara encendido .png`
+- `media/aplicaciones/lightbox/lightbox-autoportante-placements-def-long.mov`
+- `media/aplicaciones/lightbox/lightbox-doble-cara-desnudo.jpg`
+- `media/aplicaciones/lightbox/lightbox-doble-cara-encendido.png`
+- `media/aplicaciones/lightbox/lightbox-doble-cara-interior.prev.jpg`
+- `media/aplicaciones/lightbox/lightbox-interior.jpg`
+- `media/aplicaciones/lightbox/luxpanel-placements-new.mov`
+- `media/aplicaciones/lightbox/p50 placemenmts update.mov`
+- `media/aplicaciones/lightbox/p50-placements-modificado.mov`
+- `media/aplicaciones/luminarias/TUNABLE WHITE TECHNICAL VIDEO.mov`
+- `media/aplicaciones/luminarias/cassambi-tunable.mp4`
+- `media/aplicaciones/luminarias/dimmer DEF DEF DEF .mp4`
+- `media/aplicaciones/luminarias/dinamic-white-placements.mp4`
+- `media/aplicaciones/luminarias/dinamico-prueba-1.mov`
+- `media/aplicaciones/luminarias/dinamico-tecnico-completo-def.mov`
+- `media/aplicaciones/luminarias/technical-tunable-white-circular-9x16.mp4`
+- `media/aplicaciones/luminarias/technical-tunable-white-circular.mov`
+- `media/aplicaciones/luminarias/tunable action def 916.mp4`
+- `media/aplicaciones/luminarias/tunable-dedo-arreglo.mp4`
+- `media/aplicaciones/luminarias/tunable-rectified-placements.mp4`
+- `media/aplicaciones/luminarias/tunable-white-action-9x16.mp4`
+- `media/aplicaciones/luminarias/tunable-white-action.mp4`
+- `media/aplicaciones/luminarias/tunable-white-technical-video.mov`
+- `media/aplicaciones/rigidos/rigidos-nyala-def-presentacion.mov`
+- `media/aplicaciones/totems/placement-totem-sin-luz-varios-styles.mp4`
+- `media/aplicaciones/totems/totem-showroom-styles.jpg`
+- `media/aplicaciones/totems/totems-backdrops-photocallls-con-luz.mov`
+- `media/aplicaciones/vestimos/VOILE TECNICO ARREGLADO.mov`
+- `media/aplicaciones/vestimos/s-sistema-hero.svg`
+- `media/aplicaciones/vestimos/tecnico doble cara p120.mov`
+- `media/aplicaciones/vestimos/tecnico-voile.mov`
+- `media/aplicaciones/vestimos/v01-cable-suspension.svg`
+- `media/aplicaciones/vestimos/v02-regulador-cable.svg`
+- `media/aplicaciones/vestimos/v03-colgador-cilindrico.svg`
+- `media/aplicaciones/vestimos/v04-barra-superior.svg`
+- `media/aplicaciones/vestimos/v05-tejido-voile.svg`
+- `media/aplicaciones/vestimos/v06-tubo-contrapeso.svg`
+- `media/aplicaciones/vestimos/vestir-espacio-placements.mov`
+- `media/aplicaciones/vestimos/viste-tu-espacio-def-def.mov`
+- `media/aplicaciones/vestimos/voile-tecnico-def-def.bak-20261111.mov`
+- `media/aplicaciones/vestimos/voile-tecnico.mp4`
+- `media/brand/categories/cubos-aereos.png`
+- `media/brand/categories/lightbox.png`
+- `media/brand/categories/rigidos-showroom.jpg`
+- `media/brand/categories/vesteix-voile.jpg`
+- `media/brand/logo-dark.jpg`
+- `media/brand/portada-3-print-it.jpg`
+- `media/brand/portada-3-print-it.png`
+- `media/perfiles/cubo-conector.png`
+- `media/perfiles/cubo-perfil.png`
+- `media/perfiles/m1614.orig-with-dims.png`
+- `media/perfiles/p30.orig-with-dims.png`
+- `media/perfiles/p36.orig-with-dims.png`
+- `media/perfiles/p70.png`
+- `projects.json`
+- `public/icons/categorias-contact.jpg`
+- `public/icons/categorias/aereos-dark.svg`
+- `public/icons/categorias/aereos-light.svg`
+- `public/icons/categorias/aereos.png`
+- `public/icons/categorias/lightbox-dark.svg`
+- `public/icons/categorias/lightbox-light.svg`
+- `public/icons/categorias/lightbox.png`
+- `public/icons/categorias/luminarias-dark.svg`
+- `public/icons/categorias/luminarias-light.svg`
+- `public/icons/categorias/luminarias.png`
+- `public/icons/categorias/rigidos-dark.svg`
+- `public/icons/categorias/rigidos-light.svg`
+- `public/icons/categorias/rigidos.png`
+- `public/icons/categorias/totems-dark.svg`
+- `public/icons/categorias/totems-light.svg`
+- `public/icons/categorias/totems.png`
+- `public/icons/categorias/viste-tu-espacio-dark.svg`
+- `public/icons/categorias/viste-tu-espacio-light.svg`
+- `public/icons/categorias/viste-tu-espacio.png`
+- `scripts/media-path-map.json`
+- `scripts/video-optimization-report.json`
