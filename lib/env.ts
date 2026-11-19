@@ -109,3 +109,23 @@ export function postgresUsesSsl(connectionString: string): boolean {
   if (/sslmode=disable/i.test(connectionString)) return false;
   return true;
 }
+
+/**
+ * pg 8 trata sslmode=require como verify-full y rechaza el certificado del
+ * pooler de Supabase. no-verify deja el cifrado y no comprueba la cadena.
+ */
+export function pgConnectionConfig(connectionString: string): {
+  connectionString: string;
+  ssl: false | { rejectUnauthorized: false };
+} {
+  if (!postgresUsesSsl(connectionString)) {
+    return {
+      connectionString: connectionString.replace(/([?&])sslmode=[^&]*/gi, "$1").replace(/[?&]$/, ""),
+      ssl: false,
+    };
+  }
+  const withMode = /sslmode=/i.test(connectionString)
+    ? connectionString.replace(/sslmode=[^&]*/i, "sslmode=no-verify")
+    : `${connectionString}${connectionString.includes("?") ? "&" : "?"}sslmode=no-verify`;
+  return { connectionString: withMode, ssl: { rejectUnauthorized: false } };
+}

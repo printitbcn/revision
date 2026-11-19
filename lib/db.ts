@@ -1,5 +1,5 @@
 import { Pool, type QueryResultRow } from "pg";
-import { postgresUsesSsl, resolvePostgresConnection } from "@/lib/env";
+import { pgConnectionConfig, resolvePostgresConnection } from "@/lib/env";
 
 let pool: Pool | null = null;
 
@@ -11,13 +11,14 @@ export function getPool(): Pool {
     );
   }
   if (!pool) {
+    const pgConfig = pgConnectionConfig(resolved.connectionString);
     pool = new Pool({
-      connectionString: resolved.connectionString,
+      connectionString: pgConfig.connectionString,
       max: 1,
       idleTimeoutMillis: 10_000,
       connectionTimeoutMillis: 20_000,
       allowExitOnIdle: true,
-      ssl: postgresUsesSsl(resolved.connectionString) ? { rejectUnauthorized: false } : false,
+      ssl: pgConfig.ssl,
     });
     pool.on("error", (error) => {
       console.error("[revision] conexión Postgres cerrada:", error.message);
