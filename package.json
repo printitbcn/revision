@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "prebuild": "tsx scripts/ensure-db.ts",
+    "predev": "node scripts/copy-media.mjs",
+    "prebuild": "tsx scripts/ensure-db.ts && node scripts/copy-media.mjs",
+    "copy-media": "node scripts/copy-media.mjs",
     "ensure-db": "tsx scripts/ensure-db.ts",
     "start": "next start",
     "sync:from-original": "node scripts/sync-from-original.mjs",

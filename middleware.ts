@@ -39,6 +39,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Medios copiados a public/media. La CDN responde Range/206; Safari lo necesita para <video>.
+  if (pathname === "/media" || pathname.startsWith("/media/")) {
+    return NextResponse.next();
+  }
+
   // Todo lo demás: servir catálogo estático vía rewrite interno.
   // La ruta lee la cabecera: si el archivo trae ?v=..., Next no conserva
   // un query nuevo del rewrite y acabaría sirviendo el index.
