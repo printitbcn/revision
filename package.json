@@ -5,21 +5,28 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "tsx scripts/ensure-db.ts",
+    "ensure-db": "tsx scripts/ensure-db.ts",
     "start": "next start",
     "sync:from-original": "node scripts/sync-from-original.mjs",
+    "sync:dry-run": "node scripts/sync-from-original.mjs --dry-run",
+    "verify:supabase-key": "node scripts/verify-supabase-key.mjs",
     "lint": "next lint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.1",
+    "@supabase/supabase-js": "^2.119.1",
     "next": "^15.1.0",
+    "pg": "^8.23.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
+    "@types/pg": "^8.15.6",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.2"
   }
 }

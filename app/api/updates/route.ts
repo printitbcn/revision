@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getRevisionSession } from "@/lib/auth";
-import { getServiceSupabase } from "@/lib/supabase";
+import { DbConfigError, listUpdates, publicDbError } from "@/lib/store";
 
 export const runtime = "nodejs";
 
@@ -9,18 +9,12 @@ export async function GET() {
   if (!user.ok) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
   try {
-    const sb = getServiceSupabase();
-    const { data, error } = await sb
-      .from("actualizaciones")
-      .select("*")
-      .order("fecha", { ascending: false })
-      .limit(100);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ updates: data || [] });
-  } catch (e) {
-    return NextResponse.json({
-      updates: [],
-      warning: e instanceof Error ? e.message : "Supabase no configurado",
-    });
+    const updates = await listUpdates();
+    return NextResponse.json({ updates });
+  } catch (error) {
+    if (error instanceof DbConfigError) {
+      return NextResponse.json({ updates: [], warning: error.message });
+    }
+    return NextResponse.json({ error: publicDbError(error) }, { status: 500 });
   }
 }

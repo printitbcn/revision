@@ -92,7 +92,7 @@
         })
         .then(function (res) {
           if (!res.ok) {
-            alert(res.j.error || "No se pudo guardar (¿Supabase?)");
+            alert(res.j.error || "No se pudo guardar la nota");
             return;
           }
           closePanel();

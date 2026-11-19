@@ -44,7 +44,7 @@ export default function NotasAdminPage() {
     if (orphanOnly) qs.set("orphan", "1");
     const res = await fetch(`/api/notes?${qs.toString()}`);
     if (!res.ok) {
-      setError("No se pudieron cargar notas (¿sesión revisión + Supabase?)");
+      setError("No se pudieron cargar las notas");
       return;
     }
     const data = await res.json();

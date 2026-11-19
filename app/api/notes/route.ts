@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminSession, getRevisionSession, REVISION_USER } from "@/lib/auth";
-import { getServiceSupabase, type AnotacionEstado } from "@/lib/supabase";
 import { listCatalogHtmlPages } from "@/lib/catalog";
+import { DbConfigError, insertNote, listNotes, publicDbError, updateNoteEstado } from "@/lib/store";
+import type { AnotacionEstado } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
@@ -17,15 +18,13 @@ export async function GET(request: NextRequest) {
   const estado = sp.get("estado");
   const orphan = sp.get("orphan") === "1";
 
-  const sb = getServiceSupabase();
-  let q = sb.from("anotaciones").select("*").order("created_at", { ascending: false });
-  if (pagina) q = q.eq("pagina", pagina);
-  if (estado) q = q.eq("estado", estado);
-
-  const { data, error } = await q;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  let rows = data || [];
+  let rows;
+  try {
+    rows = await listNotes({ pagina, estado });
+  } catch (error) {
+    const status = error instanceof DbConfigError ? 503 : 500;
+    return NextResponse.json({ error: publicDbError(error) }, { status });
+  }
   if (orphan) {
     const pages = new Set(listCatalogHtmlPages());
     rows = rows.filter((r) => !pages.has(r.pagina));
@@ -52,14 +51,16 @@ export async function POST(request: NextRequest) {
     posicion_y: body.posicion_y != null ? Number(body.posicion_y) : null,
     texto,
     autor: String(body.autor || user.email || REVISION_USER),
-    estado: "Pendiente" as AnotacionEstado,
     captura_url: body.captura_url ? String(body.captura_url) : null,
   };
 
-  const sb = getServiceSupabase();
-  const { data, error } = await sb.from("anotaciones").insert(payload).select("*").single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ note: data });
+  try {
+    const note = await insertNote(payload);
+    return NextResponse.json({ note });
+  } catch (error) {
+    const status = error instanceof DbConfigError ? 503 : 500;
+    return NextResponse.json({ error: publicDbError(error) }, { status });
+  }
 }
 
 export async function PATCH(request: NextRequest) {
@@ -79,13 +80,13 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Estado inválido" }, { status: 400 });
   }
 
-  const sb = getServiceSupabase();
-  const { data, error } = await sb
-    .from("anotaciones")
-    .update({ estado, updated_at: new Date().toISOString() })
-    .eq("id", id)
-    .select("*")
-    .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ note: data });
+  try {
+    const note = await updateNoteEstado(id, estado);
+    if (!note) return NextResponse.json({ error: "Nota no encontrada" }, { status: 404 });
+    return NextResponse.json({ note });
+  } catch (error) {
+    const message = publicDbError(error);
+    const status = error instanceof DbConfigError ? 503 : /invalid input syntax/i.test(message) ? 400 : 500;
+    return NextResponse.json({ error: message }, { status });
+  }
 }

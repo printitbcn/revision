@@ -24,7 +24,7 @@ export default function NovedadesPage() {
       .then((r) => r.json())
       .then((data) => {
         setUpdates(data.updates || []);
-        if (data.warning) setWarning(data.warning);
+        if (data.warning || data.error) setWarning(data.warning || data.error);
         if (data.updates?.[0]?.fecha) {
           localStorage.setItem(SEEN_KEY, data.updates[0].fecha);
         }

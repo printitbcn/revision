@@ -1,70 +1,52 @@
-# Guía paso a paso — Catálogo revisión
+# Cómo está montada la revisión
 
-## 1. Repositorio (ya creado)
+El original https://github.com/printitbcn/cat-logo-2026- no se toca. Todo vive en https://github.com/printitbcn/revision y en el proyecto de Vercel `revision` (equipo printit).
 
-- URL: https://github.com/printitbcn/revision
-- El original https://github.com/printitbcn/cat-logo-2026- **no se toca**
+## Lo que ya está hecho
 
-## 2. Supabase
+- El proyecto de Vercel ya tiene `REVISION_PASSWORD`, `ADMIN_PASSWORD` y `REVISION_SESSION_SECRET`.
+- La integración de Supabase ya creó `POSTGRES_URL_NON_POOLING`, `POSTGRES_HOST`, `POSTGRES_PASSWORD`, `POSTGRES_DATABASE`, `SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY`.
+- No hace falta crear `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` ni `SUPABASE_SERVICE_ROLE_KEY`.
+- No hace falta ejecutar `supabase/schema.sql` en el navegador de Supabase. El próximo deploy lo hace.
+- No hace falta ningún secret en GitHub Actions. El catálogo original es público.
 
-1. Crea un proyecto en Supabase.
-2. SQL Editor → pega y ejecuta `supabase/schema.sql`.
-3. Settings → API → copia URL y keys.
+## Qué pasa en cada deploy
 
-## 3. Vercel (proyecto NUEVO)
+1. Vercel ejecuta `scripts/ensure-db.ts` y después `next build`.
+2. Ese script se conecta con `POSTGRES_URL_NON_POOLING` y crea las tablas si faltan.
+3. Lee `.sync-meta.json` y guarda la copia inicial (y las sincronizaciones nuevas) en `actualizaciones`, sin duplicar el mismo commit.
+4. Si el build no pudo conectar, el servidor lo vuelve a intentar al arrancar y en la primera petición.
 
-1. [vercel.com](https://vercel.com) → Add New Project.
-2. Importa **solo** `printitbcn/revision` (no el original).
-3. Framework: Next.js. Root: `.`
-4. Environment Variables:
+## Probar la web
 
-| Nombre | Notas |
-|--------|--------|
-| `REVISION_PASSWORD` | Contraseña del login revisión |
-| `ADMIN_PASSWORD` | Contraseña de `/notas` |
-| `REVISION_SESSION_SECRET` | Cadena larga aleatoria |
-| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role (solo servidor) |
+1. Abre la URL de Vercel. Entra en `/login`.
+2. Usuario: `reche@printitbcn.com`. Contraseña: `REVISION_PASSWORD`.
+3. En una página del catálogo, pulsa **Añadir nota**, haz clic en la página y guarda.
+4. Abre `/notas` e introduce `ADMIN_PASSWORD`. Ahí se ve la nota y se puede cambiar el estado.
+5. Abre `/novedades`. La primera fila es la copia inicial del catálogo.
 
-5. Deploy.
+## Sync automático
 
-## 4. Token de solo lectura al original
+Cada 15 minutos (o con **Run workflow** en Actions) el repo de revisión:
 
-1. GitHub → Settings (tu usuario o la org) → Developer settings → Personal access tokens.
-2. Genera un **Fine-grained token** (recomendado):
-   - Resource owner: `printitbcn`
-   - Repository access: **Only select** → `cat-logo-2026-`
-   - Permissions: **Contents: Read-only** (nada de Write)
-   - Expiration: la que prefieras
-3. Copia el token.
-4. En el repo **`revision`** → Settings → Secrets and variables → Actions → New repository secret:
-   - Name: `ORIGINAL_READ_TOKEN`
-   - Value: el token
-5. (Opcional) Añade también secrets `NEXT_PUBLIC_SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` para que el workflow registre filas en `actualizaciones`.
+1. Clona en solo lectura la rama `redesign-home` del original.
+2. Copia únicamente los archivos que usa el catálogo. Los vídeos grandes van por Git LFS y, si no se pueden bajar, no se sustituye `catalog/`.
+3. Si no hay cambios, no hace commit.
+4. Si hay cambios, solo sube `catalog/`, `INFORME_ASSETS.md` y `.sync-meta.json`.
 
-## 5. Probar sync
+Las notas siguen en la base de datos.
 
-1. Repo `revision` → Actions → **Sync from original catalog** → Run workflow.
-2. Si hay commits nuevos en `redesign-home` del original, actualizará `catalog/` y hará commit en `revision`.
-3. Vercel redesplegará solo desde `revision`.
-4. En la app: abre **/novedades**.
-
-## 6. Probar login y notas
-
-1. Abre la URL de Vercel → `/login`
-2. Usuario: `reche@printitbcn.com` + `REVISION_PASSWORD`
-3. En cualquier página del catálogo: **Añadir nota**
-4. Admin: `/notas` con `ADMIN_PASSWORD`
-
-## 7. “Actualiza la revisión” (manual)
-
-Pídelo en el chat o ejecuta en local:
+Para lanzarlo a mano en un ordenador:
 
 ```bash
 cd revision
-ORIGINAL_READ_TOKEN=... npm run sync:from-original
+npm install
+npm run sync:from-original
 git add catalog INFORME_ASSETS.md .sync-meta.json
 git commit -m "Sync live catalog from original"
 git push
 ```
+
+## Nombres antiguos
+
+Si en otro sitio aún existen `SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL` o `SUPABASE_SERVICE_ROLE_KEY`, la app los acepta. En este Vercel no hacen falta.
