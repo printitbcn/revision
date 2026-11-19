@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
 import "./revision-ui.css";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "PRINT IT — Catálogo revisión",
@@ -19,7 +11,13 @@ const themeBoot = `try{if(localStorage.getItem("printit-theme")==="light")docume
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={montserrat.variable} style={{ margin: 0 }}>
+      <body style={{ margin: 0 }}>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        />
         <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
         {children}
       </body>
