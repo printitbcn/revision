@@ -1,5 +1,5 @@
 -- PRINT IT · Catálogo revisión — tablas + RLS
--- Ejecutar en el SQL Editor de Supabase.
+-- La app lo ejecuta sola en el build y al arrancar. Se puede repetir.
 
 create extension if not exists "pgcrypto";
 
@@ -32,15 +32,26 @@ create table if not exists public.actualizaciones (
 );
 
 create index if not exists actualizaciones_fecha_idx on public.actualizaciones (fecha desc);
+create unique index if not exists actualizaciones_commit_sha_uidx on public.actualizaciones (commit_sha);
 
 alter table public.anotaciones enable row level security;
 alter table public.actualizaciones enable row level security;
 
--- Sin políticas abiertas para anon/authenticated:
--- la app usa SUPABASE_SERVICE_ROLE_KEY solo en el servidor.
--- (RLS activo + service role = acceso admin server-side; clientes no leen directo.)
-
-revoke all on public.anotaciones from anon, authenticated;
-revoke all on public.actualizaciones from anon, authenticated;
-grant all on public.anotaciones to service_role;
-grant all on public.actualizaciones to service_role;
+-- La app entra como dueña de las tablas (Postgres) o con la clave secreta.
+-- anon y authenticated no tienen acceso. Esos roles solo existen en Supabase.
+do $$
+begin
+  if exists (select 1 from pg_roles where rolname = 'anon') then
+    revoke all on public.anotaciones from anon;
+    revoke all on public.actualizaciones from anon;
+  end if;
+  if exists (select 1 from pg_roles where rolname = 'authenticated') then
+    revoke all on public.anotaciones from authenticated;
+    revoke all on public.actualizaciones from authenticated;
+  end if;
+  if exists (select 1 from pg_roles where rolname = 'service_role') then
+    grant all on public.anotaciones to service_role;
+    grant all on public.actualizaciones to service_role;
+  end if;
+end
+$$;

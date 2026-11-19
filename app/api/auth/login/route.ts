@@ -13,11 +13,14 @@ export async function POST(request: NextRequest) {
   const password = String(body.password || "");
 
   if (email !== REVISION_USER.toLowerCase()) {
-    return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Este acceso es para la revisión del catálogo." },
+      { status: 401 }
+    );
   }
   if (!passwordOk(password, process.env.REVISION_PASSWORD)) {
     return NextResponse.json(
-      { error: "Credenciales incorrectas (revisa REVISION_PASSWORD en Vercel)" },
+      { error: "La contraseña no coincide. Revísala e inténtalo de nuevo." },
       { status: 401 }
     );
   }

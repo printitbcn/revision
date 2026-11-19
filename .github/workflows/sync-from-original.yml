@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: sync-original-catalog
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -28,52 +32,25 @@ jobs:
 
       - name: Sync live catalog from original
         env:
-          ORIGINAL_READ_TOKEN: ${{ secrets.ORIGINAL_READ_TOKEN }}
           ORIGINAL_REPO_URL: https://github.com/printitbcn/cat-logo-2026-.git
           ORIGINAL_BRANCH: redesign-home
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          node scripts/sync-from-original.mjs
-          # Registrar actualización en Supabase si hay secrets
-          if [ -n "$NEXT_PUBLIC_SUPABASE_URL" ] && [ -n "$SUPABASE_SERVICE_ROLE_KEY" ] && [ -f .sync-meta.json ]; then
-            node <<'NODE'
-            const fs = require('fs');
-            const meta = JSON.parse(fs.readFileSync('.sync-meta.json','utf8'));
-            const url = process.env.NEXT_PUBLIC_SUPABASE_URL.replace(/\/$/, '') + '/rest/v1/actualizaciones';
-            fetch(url, {
-              method: 'POST',
-              headers: {
-                apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-                Authorization: 'Bearer ' + process.env.SUPABASE_SERVICE_ROLE_KEY,
-                'Content-Type': 'application/json',
-                Prefer: 'return=minimal'
-              },
-              body: JSON.stringify({
-                fecha: meta.fecha,
-                commit_sha: meta.commit_sha,
-                commit_message: meta.commit_message,
-                archivos_cambiados: meta.archivos_cambiados,
-                paginas_cambiadas: meta.paginas_cambiadas
-              })
-            }).then(async (r) => {
-              if (!r.ok) {
-                console.error('Supabase insert failed', r.status, await r.text());
-                process.exit(0);
-              }
-              console.log('Supabase actualizacion recorded');
-            });
-            NODE
-          fi
+        run: node scripts/sync-from-original.mjs
 
-      - name: Commit & push if catalog changed
+      - name: Commit catalog only
         run: |
           git config user.name "printit-revision-bot"
           git config user.email "revision-bot@printitbcn.com"
-          git add catalog INFORME_ASSETS.md .sync-meta.json || true
+          # Solo el catálogo y su metadato. Notas y capa de revisión no se tocan.
+          git add -- catalog INFORME_ASSETS.md .sync-meta.json
           if git diff --cached --quiet; then
             echo "No catalog changes"
             exit 0
+          fi
+          unexpected=$(git diff --cached --name-only | grep -Ev '^(catalog/|INFORME_ASSETS.md|\.sync-meta.json$)' || true)
+          if [ -n "$unexpected" ]; then
+            echo "El sync intentó cambiar archivos que no son del catálogo:"
+            echo "$unexpected"
+            exit 1
           fi
           git commit -m "Sync live catalog from original $(date -u +%Y-%m-%dT%H:%MZ)"
           git push

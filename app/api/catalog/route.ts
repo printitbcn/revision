@@ -9,7 +9,7 @@ import {
 export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
-  const urlPath = request.nextUrl.searchParams.get("path") || "/";
+  const urlPath = request.headers.get("x-catalog-path") || request.nextUrl.searchParams.get("path") || "/";
   const filePath = safeCatalogPath(urlPath);
   if (!filePath) {
     return new NextResponse("Not found", { status: 404 });
