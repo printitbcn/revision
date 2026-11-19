@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminSession, getRevisionSession, REVISION_USER } from "@/lib/auth";
 import { listCatalogHtmlPages } from "@/lib/catalog";
-import { DbConfigError, insertNote, listNotes, publicDbError, updateNoteEstado } from "@/lib/store";
+import { DbConfigError, deleteNote, insertNote, listNotes, publicDbError, updateNote } from "@/lib/store";
 import type { AnotacionEstado } from "@/lib/supabase";
 
 export const runtime = "nodejs";
@@ -72,21 +72,46 @@ export async function PATCH(request: NextRequest) {
 
   const body = await request.json().catch(() => ({}));
   const id = String(body.id || "");
+  const texto = body.texto != null ? String(body.texto).trim() : undefined;
   const estado = body.estado as AnotacionEstado | undefined;
-  if (!id || !estado) {
-    return NextResponse.json({ error: "Faltan id o estado" }, { status: 400 });
+  if (!id || (texto == null && !estado)) {
+    return NextResponse.json({ error: "Falta la nota o el cambio" }, { status: 400 });
   }
-  if (!["Pendiente", "En curso", "Resuelta"].includes(estado)) {
-    return NextResponse.json({ error: "Estado inválido" }, { status: 400 });
+  if (texto != null && !texto) {
+    return NextResponse.json({ error: "La nota no puede quedar vacía" }, { status: 400 });
+  }
+  if (estado && !["Pendiente", "En curso", "Resuelta"].includes(estado)) {
+    return NextResponse.json({ error: "Ese estado no es válido" }, { status: 400 });
   }
 
   try {
-    const note = await updateNoteEstado(id, estado);
-    if (!note) return NextResponse.json({ error: "Nota no encontrada" }, { status: 404 });
+    const note = await updateNote(id, { texto, estado });
+    if (!note) return NextResponse.json({ error: "No encontramos esa nota" }, { status: 404 });
     return NextResponse.json({ note });
   } catch (error) {
     const message = publicDbError(error);
     const status = error instanceof DbConfigError ? 503 : /invalid input syntax/i.test(message) ? 400 : 500;
-    return NextResponse.json({ error: message }, { status });
+    return NextResponse.json(
+      { error: status === 400 ? "No se pudo guardar el cambio" : message },
+      { status }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const admin = await getAdminSession();
+  const user = await getRevisionSession();
+  if (!admin.ok && !user.ok) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+  const id = String(request.nextUrl.searchParams.get("id") || "");
+  if (!id) return NextResponse.json({ error: "Falta la nota" }, { status: 400 });
+  try {
+    const removed = await deleteNote(id);
+    if (!removed) return NextResponse.json({ error: "No encontramos esa nota" }, { status: 404 });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    const status = error instanceof DbConfigError ? 503 : 500;
+    return NextResponse.json({ error: publicDbError(error) }, { status });
   }
 }

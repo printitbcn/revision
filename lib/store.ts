@@ -107,28 +107,51 @@ export async function insertNote(note: NewNote): Promise<Anotacion> {
   return data as Anotacion;
 }
 
-export async function updateNoteEstado(id: string, estado: AnotacionEstado): Promise<Anotacion | null> {
+export async function updateNote(
+  id: string,
+  patch: { texto?: string; estado?: AnotacionEstado }
+): Promise<Anotacion | null> {
   const mode = await ready();
   if (mode === "postgres") {
+    const sets = ["updated_at = now()"];
+    const params: unknown[] = [id];
+    if (patch.texto != null) {
+      params.push(patch.texto);
+      sets.push(`texto = $${params.length}`);
+    }
+    if (patch.estado != null) {
+      params.push(patch.estado);
+      sets.push(`estado = $${params.length}`);
+    }
     const rows = await dbQuery<Anotacion>(
-      `update public.anotaciones
-       set estado = $2, updated_at = now()
-       where id = $1
-       returning *`,
-      [id, estado]
+      `update public.anotaciones set ${sets.join(", ")} where id = $1 returning *`,
+      params
     );
     return rows[0] ? serialize(rows[0]) : null;
   }
 
+  const payload: Record<string, string> = { updated_at: new Date().toISOString() };
+  if (patch.texto != null) payload.texto = patch.texto;
+  if (patch.estado != null) payload.estado = patch.estado;
   const sb = getServiceSupabase();
-  const { data, error } = await sb
-    .from("anotaciones")
-    .update({ estado, updated_at: new Date().toISOString() })
-    .eq("id", id)
-    .select("*")
-    .single();
+  const { data, error } = await sb.from("anotaciones").update(payload).eq("id", id).select("*").maybeSingle();
   if (error) throw new Error(error.message);
-  return data as Anotacion;
+  return (data as Anotacion | null) ?? null;
+}
+
+export async function deleteNote(id: string): Promise<boolean> {
+  const mode = await ready();
+  if (mode === "postgres") {
+    const rows = await dbQuery<{ id: string }>(
+      `delete from public.anotaciones where id = $1 returning id`,
+      [id]
+    );
+    return rows.length > 0;
+  }
+  const sb = getServiceSupabase();
+  const { data, error } = await sb.from("anotaciones").delete().eq("id", id).select("id");
+  if (error) throw new Error(error.message);
+  return (data || []).length > 0;
 }
 
 export async function listUpdates(): Promise<Actualizacion[]> {

@@ -40,10 +40,13 @@ export function middleware(request: NextRequest) {
   }
 
   // Todo lo demás: servir catálogo estático vía rewrite interno.
+  // La ruta lee la cabecera: si el archivo trae ?v=..., Next no conserva
+  // un query nuevo del rewrite y acabaría sirviendo el index.
+  const headers = new Headers(request.headers);
+  headers.set("x-catalog-path", pathname);
   const rewriteUrl = request.nextUrl.clone();
   rewriteUrl.pathname = "/api/catalog";
-  rewriteUrl.searchParams.set("path", pathname);
-  return NextResponse.rewrite(rewriteUrl);
+  return NextResponse.rewrite(rewriteUrl, { request: { headers } });
 }
 
 export const config = {

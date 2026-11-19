@@ -56,8 +56,8 @@ export function readCatalogFile(filePath: string): Buffer | null {
 /** Inyecta overlay de notas + enlace Novedades en HTML del catálogo. */
 export function injectRevisionLayer(html: string): string {
   const snippet = `
-<link rel="stylesheet" href="/revision/overlay.css" />
-<script src="/revision/overlay.js" defer></script>
+<link rel="stylesheet" href="/revision/overlay.css?v=4" />
+<script src="/revision/overlay.js?v=4" defer></script>
 `;
   if (/<\/body>/i.test(html)) {
     return html.replace(/<\/body>/i, `${snippet}</body>`);
