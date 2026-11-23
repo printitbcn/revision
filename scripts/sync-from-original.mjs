@@ -6,6 +6,7 @@
  *
  * El original es público: no hace falta ORIGINAL_READ_TOKEN.
  * Escribe catalog/, INFORME_ASSETS.md y .sync-meta.json.
+ * Los archivos de catalog/media/ que no están en el original se conservan.
  * La app registra la novedad en Supabase al construir o arrancar.
  */
 import { execSync } from "child_process";
@@ -187,9 +188,15 @@ function catalogRels() {
   return walk(CATALOG).map((file) => path.relative(CATALOG, file).replace(/\\/g, "/"));
 }
 
+function isCatalogMedia(rel) {
+  const normalized = rel.replace(/\\/g, "/");
+  return normalized === "media" || normalized.startsWith("media/");
+}
+
 function changedFiles(src, live) {
   const content = [];
   const removed = [];
+  const kept = [];
   const liveSet = new Set(live);
   for (const rel of live) {
     const from = path.join(src, rel);
@@ -197,9 +204,26 @@ function changedFiles(src, live) {
     if (!fs.existsSync(to) || !sameFile(from, to)) content.push(rel);
   }
   for (const rel of catalogRels()) {
-    if (!liveSet.has(rel)) removed.push(rel);
+    if (liveSet.has(rel)) continue;
+    // Los medios que solo viven en esta copia no están en el original.
+    // El sync no los borra: si no, desaparecen vídeos que nunca se subieron allí.
+    if (isCatalogMedia(rel)) kept.push(rel);
+    else removed.push(rel);
   }
-  return { content: content.sort(), removed: removed.sort() };
+  return { content: content.sort(), removed: removed.sort(), kept: kept.sort() };
+}
+
+function stashKeptMedia(kept) {
+  const stash = fs.mkdtempSync(path.join(os.tmpdir(), "printit-media-"));
+  for (const rel of kept) copyFile(path.join(CATALOG, rel), path.join(stash, rel));
+  return stash;
+}
+
+function restoreKeptMedia(stash, kept) {
+  for (const rel of kept) {
+    const dest = path.join(CATALOG, rel);
+    if (!fs.existsSync(dest)) copyFile(path.join(stash, rel), dest);
+  }
 }
 
 function readMeta() {
@@ -263,11 +287,19 @@ function main() {
     const prev = readMeta();
     const sameCommit = prev?.commit_sha === commit;
     console.log("Commit", commit.slice(0, 7), message);
-    console.log("Contenido distinto:", diff.content.length, "| solo en catalog:", diff.removed.length);
+    console.log(
+      "Contenido distinto:",
+      diff.content.length,
+      "| se quitarían:",
+      diff.removed.length,
+      "| medios locales conservados:",
+      diff.kept.length
+    );
 
     if (DRY) {
       diff.content.forEach((rel) => console.log(" ~", rel));
       diff.removed.forEach((rel) => console.log(" -", rel));
+      diff.kept.forEach((rel) => console.log(" =", rel));
       console.log(sameCommit ? "Mismo commit que .sync-meta.json" : "Commit distinto al de .sync-meta.json");
       if (!diff.content.length && sameCommit) {
         console.log("No escribiría nada. Los archivos que solo están en esta copia se conservan.");
@@ -276,11 +308,13 @@ function main() {
     }
 
     if (!diff.content.length && sameCommit) {
-      if (diff.removed.length) {
+      if (diff.removed.length || diff.kept.length) {
         console.log(
           "Sin cambios en el original.",
+          diff.kept.length,
+          "medios locales se conservan;",
           diff.removed.length,
-          "archivos solo están en esta copia y se conservan."
+          "archivos fuera de media/ también se quedan porque el original no cambió."
         );
       } else {
         console.log("Sin cambios. No se toca catalog/ ni .sync-meta.json.");
@@ -288,11 +322,17 @@ function main() {
       return;
     }
 
-    rmDir(CATALOG);
-    fs.mkdirSync(CATALOG, { recursive: true });
-    for (const rel of live) {
-      if (rel === "scripts/serve-lan.sh") continue;
-      copyFile(path.join(src, rel), path.join(CATALOG, rel));
+    const mediaStash = stashKeptMedia(diff.kept);
+    try {
+      rmDir(CATALOG);
+      fs.mkdirSync(CATALOG, { recursive: true });
+      for (const rel of live) {
+        if (rel === "scripts/serve-lan.sh") continue;
+        copyFile(path.join(src, rel), path.join(CATALOG, rel));
+      }
+      restoreKeptMedia(mediaStash, diff.kept);
+    } finally {
+      rmDir(mediaStash);
     }
 
     const pages = changed.filter((file) => file.endsWith(".html")).map((file) => "/" + file);
